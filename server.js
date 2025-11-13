@@ -1,19 +1,28 @@
-{
-  "name": "bookhub-server",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "seed": "node seed.js"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "mongoose": "^7.8.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.11"
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import app from "./app.js";
+
+dotenv.config();
+
+const PORT = process.env.PORT || 5000;
+
+// MongoDB connection (fixed for Windows SSL issue)
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      tlsAllowInvalidCertificates: true,
+      retryWrites: true,
+      w: "majority",
+    });
+    console.log("✅ MongoDB Connected Successfully!");
+  } catch (error) {
+    console.error("❌ DB connection failed:", error.message);
+    process.exit(1);
   }
-}
+};
+
+connectDB();
+
+app.listen(PORT, () =>
+  console.log(`🚀 Server running on port ${PORT}`)
+);
