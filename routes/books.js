@@ -5,11 +5,12 @@ const router = express.Router();
 
 router.post("/", createBook);
 router.get("/", getBooks);
+
 router.get("/:id", getBook);
 router.put("/:id", updateBook);
 router.delete("/:id", deleteBook);
 
-// convenience route to get books by user email
+// convenience route to get books by user email (must come before /:id)
 router.get("/user/:email", async (req, res, next) => {
   req.query.userEmail = req.params.email;
   next();

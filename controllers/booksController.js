@@ -12,6 +12,7 @@ export const createBook = async (req, res, next) => {
 };
 
 export const getBooks = async (req, res, next) => {
+  
   try {
     const { sort = "rating", order = "desc", limit = 0, userEmail, q } = req.query;
     const filter = {};
@@ -23,6 +24,7 @@ export const getBooks = async (req, res, next) => {
     const sortObj = {};
     sortObj[sort] = order === "asc" ? 1 : -1;
     const books = await Book.find(filter).sort(sortObj).limit(Number(limit) || 0);
+    if (!books) return res.status(404).json({ message: "Books not found" });
     res.json(books);
   } catch (err) {
     next(err);
