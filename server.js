@@ -10,9 +10,9 @@ const PORT = process.env.PORT || 5000;
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
-      tlsAllowInvalidCertificates: true,
-      retryWrites: true,
-      w: "majority",
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000
     });
     console.log("✅ MongoDB Connected Successfully!");
   } catch (error) {

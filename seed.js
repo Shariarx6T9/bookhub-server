@@ -38,11 +38,16 @@ const books = [
 
 const run = async () => {
   try {
-    await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connect(MONGO_URI, {
+      maxPoolSize: 5,
+      serverSelectionTimeoutMS: 5000
+    });
     console.log("Connected to MongoDB for seeding...");
+    
     await Book.deleteMany({});
-    await Book.insertMany(books);
-    console.log("Seeded books successfully.");
+    await Book.insertMany(books, { ordered: false });
+    
+    console.log(`Seeded ${books.length} books successfully.`);
     process.exit(0);
   } catch (err) {
     console.error("Seed error:", err);
